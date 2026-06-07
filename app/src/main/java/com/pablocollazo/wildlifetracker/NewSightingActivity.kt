@@ -7,6 +7,7 @@ import android.net.Uri
 import android.os.Bundle
 import android.os.Environment
 import android.widget.Button
+import android.widget.EditText
 import android.widget.ImageView
 import android.widget.TextView
 import android.widget.Toast
@@ -14,8 +15,12 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.core.content.FileProvider
+import androidx.lifecycle.lifecycleScope
+import androidx.room.Room
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationServices
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.io.File
 import java.text.SimpleDateFormat
 import java.util.Date
@@ -29,6 +34,7 @@ class NewSightingActivity : AppCompatActivity() {
     private lateinit var fusedLocationClient: FusedLocationProviderClient
     private var latitude: Double = 0.0
     private var longitude: Double = 0.0
+    private lateinit var database: SightingDatabase
 
     //Launcher to get camera permission
     private val requestPermissionCameraLauncher = registerForActivityResult(
@@ -70,9 +76,14 @@ class NewSightingActivity : AppCompatActivity() {
 
         imageView = findViewById(R.id.imageViewPhoto)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
-        val buttonTakePhoto = findViewById<Button>(R.id.buttonTakePhoto)
 
+        val buttonTakePhoto = findViewById<Button>(R.id.buttonTakePhoto)
         buttonTakePhoto.setOnClickListener { checkCameraPermissionAndTakePhoto()}
+
+        database = Room.databaseBuilder(this, SightingDatabase::class.java, "sighting_db").build()
+
+        val buttonSave = findViewById<Button>(R.id.buttonSave)
+        buttonSave.setOnClickListener { saveSighting()}
     }
 
     private fun checkCameraPermissionAndTakePhoto() {
@@ -122,6 +133,18 @@ class NewSightingActivity : AppCompatActivity() {
                 findViewById<TextView>(R.id.textViewLocation).text = "Location: $latitude, $longitude"
             }
 
+        }
+    }
+
+    private fun saveSighting(){
+        val species = findViewById<EditText>(R.id.editTextSpecies).text.toString()
+        val notes = findViewById<EditText>(R.id.editTextNotes).text.toString()
+        val date = System.currentTimeMillis()
+
+        val sighting = Sighting(0,photoUri.toString(),species,notes,latitude,longitude,date,false)
+
+        lifecycleScope.launch(Dispatchers.IO){
+            database.sightingDao().insertSighting(sighting)
         }
     }
 }
