@@ -145,6 +145,9 @@ class NewSightingActivity : AppCompatActivity() {
 
         lifecycleScope.launch(Dispatchers.IO){
             database.sightingDao().insertSighting(sighting)
+            runOnUiThread {
+                finish()
+            }
         }
     }
 }
