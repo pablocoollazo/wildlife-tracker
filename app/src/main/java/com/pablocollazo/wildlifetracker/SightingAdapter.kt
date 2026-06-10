@@ -5,6 +5,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
+import android.widget.LinearLayout
 import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
@@ -39,10 +40,11 @@ class SightingAdapter(private val sightings: List<Sighting>, private val onLongP
             true
         }
 
-        if (sighting.isFavourite){
-            holder.itemView.setBackgroundColor(android.graphics.Color.YELLOW)
-        }else{
-            holder.itemView.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        val container = holder.itemView.findViewById<LinearLayout>(R.id.itemContainer)
+        if (sighting.isFavourite) {
+            container.setBackgroundColor(android.graphics.Color.parseColor("#FFF9C4"))
+        } else {
+            container.setBackgroundColor(android.graphics.Color.TRANSPARENT)
         }
 
         holder.itemView.setOnClickListener {

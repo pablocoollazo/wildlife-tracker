@@ -47,7 +47,7 @@ class MainActivity : AppCompatActivity() {
                     sightings,
                     onLongPress = { sighting ->
                         lifecycleScope.launch(Dispatchers.IO) {
-                            database.sightingDao().updateSighting(sighting.copy(isFavourite = true))
+                            database.sightingDao().updateSighting(sighting.copy(isFavourite = !sighting.isFavourite))
                             runOnUiThread { loadSightings() }
                         }
                     },
