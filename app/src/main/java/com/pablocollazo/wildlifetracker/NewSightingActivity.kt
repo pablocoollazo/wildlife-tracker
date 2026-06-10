@@ -140,8 +140,17 @@ class NewSightingActivity : AppCompatActivity() {
         val species = findViewById<EditText>(R.id.editTextSpecies).text.toString()
         val notes = findViewById<EditText>(R.id.editTextNotes).text.toString()
         val date = System.currentTimeMillis()
-
         val sighting = Sighting(0,photoUri.toString(),species,notes,latitude,longitude,date,false)
+
+        if (photoUri == null) {
+            Toast.makeText(this, "Please take a photo first", Toast.LENGTH_SHORT).show()
+            return
+        }
+
+        if (species.isEmpty()) {
+            Toast.makeText(this, "Please enter a species name", Toast.LENGTH_SHORT).show()
+            return
+        }
 
         lifecycleScope.launch(Dispatchers.IO){
             database.sightingDao().insertSighting(sighting)
