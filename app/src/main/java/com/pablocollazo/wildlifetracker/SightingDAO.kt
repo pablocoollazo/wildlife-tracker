@@ -4,6 +4,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 
 @Dao
 interface SightingDAO {
@@ -16,5 +17,8 @@ interface SightingDAO {
 
     @Query("SELECT * FROM Sighting")
     fun getSightings(): List<Sighting>
+
+    @Update
+    fun updateSighting(sighting: Sighting)
 }
 

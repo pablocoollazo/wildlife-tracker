@@ -6,13 +6,12 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.ImageView
 import android.widget.TextView
-import androidx.constraintlayout.widget.ConstraintSet
 import androidx.recyclerview.widget.RecyclerView
 import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SightingAdapter(private val sightings: List<Sighting>) : RecyclerView.Adapter<SightingAdapter.ViewHolder>() {
+class SightingAdapter(private val sightings: List<Sighting>, private val onLongPress: (Sighting) -> Unit) : RecyclerView.Adapter<SightingAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -35,12 +34,26 @@ class SightingAdapter(private val sightings: List<Sighting>) : RecyclerView.Adap
         holder.textDate.text = dateFormatted
         holder.imageView.setImageURI(Uri.parse(sighting.photo))
 
+        holder.itemView.setOnLongClickListener {
+            onLongPress(sighting)
+            true
+        }
+
+        if (sighting.isFavourite){
+            holder.itemView.setBackgroundColor(android.graphics.Color.YELLOW)
+        }else{
+            holder.itemView.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        }
+
     }
 
     override fun getItemCount(): Int {
         return sightings.size
     }
 
+    fun getSighting(position: Int): Sighting{
+        return sightings[position]
+    }
     class ViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
         val imageView = itemView.findViewById<ImageView>(R.id.imageViewPhoto)
         val textSpecies = itemView.findViewById<TextView>(R.id.textSpecie)
