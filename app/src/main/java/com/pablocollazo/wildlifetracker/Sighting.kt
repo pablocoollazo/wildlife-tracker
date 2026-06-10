@@ -2,6 +2,7 @@ package com.pablocollazo.wildlifetracker
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey
+import java.io.Serializable
 
 @Entity
 data class Sighting(
@@ -14,4 +15,4 @@ data class Sighting(
     val longitude: Double,
     val date: Long,
     val isFavourite: Boolean,
-)
+) : Serializable

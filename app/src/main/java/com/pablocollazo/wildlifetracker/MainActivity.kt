@@ -39,36 +39,41 @@ class MainActivity : AppCompatActivity() {
     }
 
     private fun loadSightings() {
-        lifecycleScope.launch(Dispatchers.IO){
+        lifecycleScope.launch(Dispatchers.IO) {
             val sightings = database.sightingDao().getSightings()
+
             runOnUiThread {
-                adapter = SightingAdapter(sightings) {sighting ->
-                    lifecycleScope.launch(Dispatchers.IO){
-                        database.sightingDao().updateSighting(sighting.copy(isFavourite = true))
-                        runOnUiThread { loadSightings() }
+                adapter = SightingAdapter(
+                    sightings,
+                    onLongPress = { sighting ->
+                        lifecycleScope.launch(Dispatchers.IO) {
+                            database.sightingDao().updateSighting(sighting.copy(isFavourite = true))
+                            runOnUiThread { loadSightings() }
+                        }
+                    },
+                    onClick = { sighting ->
+                        val intent = Intent(this@MainActivity, DetailActivity::class.java)
+                        intent.putExtra("sighting", sighting)
+                        startActivity(intent)
                     }
-                }
+                )
+
                 recycler.adapter = adapter
 
-                val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0,
-                    ItemTouchHelper.LEFT) {
-                    override fun onMove(
-                        recyclerView: RecyclerView,
-                        viewHolder: RecyclerView.ViewHolder,
-                        target: RecyclerView.ViewHolder
-                    ) = false
+                val itemTouchHelper = ItemTouchHelper(object : ItemTouchHelper.SimpleCallback(0, ItemTouchHelper.LEFT) {
+                    override fun onMove(recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder, target: RecyclerView.ViewHolder) = false
 
                     override fun onSwiped(viewHolder: RecyclerView.ViewHolder, direction: Int) {
                         val position = viewHolder.bindingAdapterPosition
                         val sighting = adapter.getSighting(position)
-                        lifecycleScope.launch(Dispatchers.IO){
+
+                        lifecycleScope.launch(Dispatchers.IO) {
                             database.sightingDao().deleteSighting(sighting)
-                            runOnUiThread {
-                                loadSightings()
-                            }
+                            runOnUiThread { loadSightings() }
                         }
                     }
                 })
+
                 itemTouchHelper.attachToRecyclerView(recycler)
             }
         }

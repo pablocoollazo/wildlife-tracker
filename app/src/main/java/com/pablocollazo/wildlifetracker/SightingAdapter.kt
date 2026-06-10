@@ -11,7 +11,7 @@ import java.text.SimpleDateFormat
 import java.util.Date
 import java.util.Locale
 
-class SightingAdapter(private val sightings: List<Sighting>, private val onLongPress: (Sighting) -> Unit) : RecyclerView.Adapter<SightingAdapter.ViewHolder>() {
+class SightingAdapter(private val sightings: List<Sighting>, private val onLongPress: (Sighting) -> Unit, private val onClick: (Sighting) -> Unit) : RecyclerView.Adapter<SightingAdapter.ViewHolder>() {
     override fun onCreateViewHolder(
         parent: ViewGroup,
         viewType: Int
@@ -43,6 +43,10 @@ class SightingAdapter(private val sightings: List<Sighting>, private val onLongP
             holder.itemView.setBackgroundColor(android.graphics.Color.YELLOW)
         }else{
             holder.itemView.setBackgroundColor(android.graphics.Color.TRANSPARENT)
+        }
+
+        holder.itemView.setOnClickListener {
+            onClick(sighting)
         }
 
     }
