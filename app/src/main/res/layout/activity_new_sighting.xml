@@ -22,13 +22,6 @@
             android:orientation="vertical"
             android:padding="16dp">
 
-            <com.google.android.material.button.MaterialButton
-                android:id="@+id/buttonTakePhoto"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:text="📷 Take Photo"
-                style="@style/Widget.Material3.Button.OutlinedButton"/>
-
             <com.google.android.material.textfield.TextInputLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
@@ -40,7 +33,6 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:hint="Species name" />
-
             </com.google.android.material.textfield.TextInputLayout>
 
             <com.google.android.material.textfield.TextInputLayout

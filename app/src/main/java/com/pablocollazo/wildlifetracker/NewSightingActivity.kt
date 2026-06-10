@@ -77,13 +77,12 @@ class NewSightingActivity : AppCompatActivity() {
         imageView = findViewById(R.id.imageViewPhoto)
         fusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
-        val buttonTakePhoto = findViewById<Button>(R.id.buttonTakePhoto)
-        buttonTakePhoto.setOnClickListener { checkCameraPermissionAndTakePhoto()}
-
         database = Room.databaseBuilder(this, SightingDatabase::class.java, "sighting_db").build()
 
         val buttonSave = findViewById<Button>(R.id.buttonSave)
         buttonSave.setOnClickListener { saveSighting()}
+
+        checkCameraPermissionAndTakePhoto()
     }
 
     private fun checkCameraPermissionAndTakePhoto() {
