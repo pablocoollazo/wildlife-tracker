@@ -28,6 +28,12 @@ class MainActivity : AppCompatActivity() {
             startActivity(intent)
         }
 
+        val fabMap = findViewById<FloatingActionButton>(R.id.fabMap)
+        fabMap.setOnClickListener {
+            val intent = Intent(this, MapActivity::class.java)
+            startActivity(intent)
+        }
+
         database = Room.databaseBuilder(this, SightingDatabase::class.java, "sighting_db").build()
         recycler = findViewById(R.id.recyclerViewSightings)
         recycler.layoutManager = LinearLayoutManager(this)
